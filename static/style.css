@@ -10,6 +10,19 @@ body {
   font-family: 'Noto Sans', sans-serif;
 }
 
+/* Keep long math and media inside their own scrollable regions. */
+.container,
+.column,
+.method-detail,
+.method-detail .content,
+.method-detail-heading .title {
+  min-width: 0;
+}
+
+[id] {
+  scroll-margin-top: 1rem;
+}
+
 /* ── Publication hero ── */
 .publication-title {
   color: var(--paper-primary-dark) !important;
@@ -53,7 +66,15 @@ body {
   margin: 4px;
 }
 
+.publication-links .button {
+  min-height: 44px;
+}
+
 /* ── Teaser ── */
+.teaser > .container {
+  width: 100%;
+}
+
 .teaser .hero-body {
   padding-top: 0;
   padding-bottom: 3rem;
@@ -263,8 +284,8 @@ h2.title.tldr-heading,
   margin-top: 2.25rem;
   padding: 1.5rem 1.75rem;
   align-items: center;
-  background: #fff;
-  border: 1px solid #dbdbdb;
+  background: #eef4f9;
+  border: 1px solid #b3cfe0;
   border-radius: 10px;
 }
 
@@ -311,6 +332,11 @@ h2.title.tldr-heading,
   overflow-y: hidden;
 }
 
+:focus-visible {
+  outline: 2px solid var(--paper-primary-dark);
+  outline-offset: 3px;
+}
+
 /* ── Separator and alternating background ── */
 .section-sep {
   margin: 0;
@@ -339,7 +365,7 @@ h2.title.tldr-heading,
   }
 
   .publication-title {
-    font-size: 1.65rem !important;
+    font-size: clamp(1.1rem, 5.8vw, 1.65rem) !important;
   }
 
   .publication-tagline {
@@ -352,6 +378,24 @@ h2.title.tldr-heading,
 
   .section {
     padding: 2rem 1rem;
+  }
+
+  .hero-body {
+    padding: 2rem 1rem;
+  }
+
+  .method-detail-heading {
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .method-detail-heading .title {
+    font-size: 1.2rem;
+    line-height: 1.35;
+  }
+
+  .method-equation {
+    padding: 0.5rem 0.65rem;
   }
 
   .tldr-box,

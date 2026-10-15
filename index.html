@@ -24,7 +24,7 @@
       throwOnError: false
     });"></script>
   <!-- Custom -->
-  <link rel="stylesheet" href="static/style.css?v=20261014-benchmark-links" />
+  <link rel="stylesheet" href="static/style.css?v=20261014-scaled-figures" />
 </head>
 <body>
 
@@ -60,7 +60,7 @@
 
           <div class="publication-links">
             <span class="link-block">
-              <a href="static/advantage-guidance.pdf" class="external-link button is-normal is-rounded is-dark">
+              <a href="https://arxiv.org/abs/2610.19783" class="external-link button is-normal is-rounded is-dark">
                 <span class="icon"><i class="fas fa-file-pdf" aria-hidden="true"></i></span>
                 <span>Paper</span>
               </a>
@@ -82,7 +82,7 @@
 <section class="hero teaser">
   <div class="container is-max-widescreen">
     <div class="hero-body" style="padding-top:0; padding-bottom:2rem;">
-      <figure class="image">
+      <figure class="image" aria-label="Advantage Guidance overview figure">
         <img class="fig-img" src="static/figures/overview.svg"
              alt="Advantage Guidance aligns actions with requested advantages and achieves the highest aggregated success rate among the compared methods." />
       </figure>
@@ -127,6 +127,7 @@
         then query with high advantage to generate "good" actions.
         While such <strong>advantage-conditioned policies</strong> are conceptually appealing, naïvely doing so typically <u>underperforms</u> dedicated RL methods. 
         What is missing from this simple recipe?
+      </p>
     </div>
   </div>
 </section>
@@ -170,7 +171,7 @@
 
     <div class="insight-box">
       <strong>Solution.</strong> Our <a href="#contrastive-guidance">contrastive guidance</a> formulation below can sample advantage-maximizing actions.
-      <figure class="image" style="max-width:720px; margin:1.5rem auto 0;">
+      <figure class="image" aria-label="Advantage Guidance sampling distributions" style="max-width:720px; margin:1.5rem auto 0;">
         <img class="fig-img" src="static/figures/advantage-guidance-distributions.svg"
              alt="Achieved advantage distributions: AG conditioning matches the requested advantage, while AG with contrastive guidance favors higher-advantage actions." />
       </figure>
@@ -200,7 +201,7 @@
       </p>
     </div>
 
-    <figure class="image" style="margin:1.5rem 0 0.75rem;">
+    <figure class="image" aria-label="Advantage alignment across four task domains" style="margin:1.5rem 0 0.75rem;">
       <img class="fig-img bordered" src="static/figures/advantage-alignment.svg"
            alt="Achieved advantage versus query advantage across four OGBench domains. Advantage Guidance follows the requested value while naïve advantage conditioning responds weakly." />
     </figure>
@@ -360,7 +361,7 @@
       </p>
     </div>
 
-    <figure class="image" style="margin:1.5rem 0 0.75rem;">
+    <figure class="image" aria-label="Offline reinforcement learning results by task family" style="margin:1.5rem 0 0.75rem;">
       <img class="fig-img bordered" src="static/figures/results.svg"
            alt="Offline RL success rates across OGBench and OCBench. Advantage Guidance has the highest aggregate success rate." />
     </figure>
@@ -373,7 +374,7 @@
     <div class="result-highlight">
       <p class="result-big">Simple supervised training.<br /><span>State-of-the-art performance.</span></p>
       <p>
-        While we expected the main benefit of AG to be its simplicity, it empirically outperform much
+        While we expected the main benefit of AG to be its simplicity, it empirically outperforms much
         more elaborate RL methods.
       </p>
     </div>
@@ -393,7 +394,9 @@
         <div class="bibtex-code">@article{zhou2026advantage,
   title   = {Reinforcement Learning via Advantage Guidance},
   author  = {Zhou, Zhiyuan and Levine, Sergey},
-  year    = {2026}
+  journal = {arXiv preprint arXiv:2610.19783},
+  year    = {2026},
+  url     = {https://arxiv.org/abs/2610.19783}
 }</div>
       </div>
     </div>
