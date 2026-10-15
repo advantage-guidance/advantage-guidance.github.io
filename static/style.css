@@ -1,0 +1,367 @@
+/* ── Fonts and paper palette ── */
+:root {
+  --paper-primary: #73A4C6;
+  --paper-primary-dark: #4F83A6;
+  --paper-green: #86C3A4;
+  --paper-green-dark: #3C9673;
+}
+
+body {
+  font-family: 'Noto Sans', sans-serif;
+}
+
+/* ── Publication hero ── */
+.publication-title {
+  color: var(--paper-primary-dark) !important;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  font-size: 2.3rem !important;
+  line-height: 1.25 !important;
+}
+
+.publication-title-part {
+  display: inline-block;
+  max-width: 100%;
+}
+
+.publication-tagline {
+  margin: -0.25rem 0 1rem;
+  color: #363636;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.publication-authors {
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+}
+
+.publication-authors a {
+  color: var(--paper-primary-dark);
+}
+
+.publication-authors a:hover,
+.publication-authors a:focus {
+  color: #3273dc;
+  text-decoration: underline;
+}
+
+.author-block {
+  margin-right: 4px;
+}
+
+.publication-links .link-block {
+  margin: 4px;
+}
+
+/* ── Teaser ── */
+.teaser .hero-body {
+  padding-top: 0;
+  padding-bottom: 3rem;
+}
+
+/* ── TL;DR ── */
+h2.title.tldr-heading,
+.section-heading.tldr-heading {
+  color: var(--paper-primary) !important;
+  text-align: center;
+}
+
+.tldr-box {
+  padding: 1.5rem 1.75rem;
+  background: #eef4f9;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.tldr-box .tldr-heading {
+  margin-bottom: 0.75rem;
+}
+
+.tldr-box p {
+  margin: 0;
+}
+
+.tldr-box strong,
+.content strong {
+  color: var(--paper-primary-dark);
+}
+
+/* ── Section headings ── */
+.section-heading {
+  margin-bottom: 1.25rem;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+/* ── Analysis headline ── */
+.analysis-kicker {
+  margin-bottom: 0.35rem;
+  color: #777;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.analysis-tagline {
+  margin-bottom: 0 !important;
+  color: var(--paper-primary-dark) !important;
+}
+
+.analysis-subtitle {
+  max-width: 760px;
+  margin: 0 0 1.75rem;
+  color: #777;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* ── Figure captions ── */
+.fig-caption {
+  margin-top: 0.75rem;
+  margin-bottom: 1em;
+  color: #555;
+  font-size: 1rem;
+  line-height: 1.55;
+  text-align: left;
+}
+
+.fig-caption strong {
+  color: #222;
+}
+
+/* ── Key insight box ── */
+.insight-box {
+  margin: 1.75rem 0 0;
+  padding: 1rem 1.25rem;
+  background: #eef4f9;
+  border: 1px solid #b3cfe0;
+  border-radius: 8px;
+  font-size: 0.97rem;
+  line-height: 1.65;
+}
+
+.insight-box strong {
+  color: var(--paper-primary-dark);
+}
+
+.insight-box .fig-img {
+  mix-blend-mode: multiply;
+}
+
+.insight-box a {
+  color: var(--paper-primary-dark);
+}
+
+.insight-box a:hover,
+.insight-box a:focus-visible {
+  color: var(--paper-primary-dark);
+  text-decoration: underline;
+}
+
+/* ── Method details ── */
+.method-detail {
+  margin: 1.5rem 0;
+  padding: 1.5rem 1.75rem;
+  background: #f8f9fa;
+  border: 1px solid #dfe5e9;
+  border-radius: 12px;
+}
+
+.method-detail.featured {
+  background: #eef4f9;
+  border-color: #b3cfe0;
+}
+
+.method-detail-heading {
+  display: flex;
+  margin-bottom: 0.75rem;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.method-detail-heading .title {
+  margin: 0;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+}
+
+.method-number {
+  display: inline-flex;
+  width: 1.8rem;
+  height: 1.8rem;
+  flex: 0 0 1.8rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--paper-primary);
+  background: #fff;
+  border: 1px solid #b3cfe0;
+  border-radius: 50%;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.method-detail .content p:last-child {
+  margin-bottom: 0;
+}
+
+.method-equation {
+  margin: 1rem 0 1.2rem;
+  padding: 0.65rem 1rem;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.method-equation .katex-display {
+  margin: 0.5rem 0;
+}
+
+.method-equation.emphasized {
+  border-color: #b3cfe0;
+}
+
+.guarantee-title {
+  margin-top: 1.35rem !important;
+  margin-bottom: 0.35rem !important;
+  color: var(--paper-primary-dark);
+  font-weight: 700;
+}
+
+.guarantee-equation {
+  max-width: 680px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* ── Results ── */
+.results-container {
+  max-width: 1152px !important;
+}
+
+.results-copy {
+  max-width: 960px;
+}
+
+.results-copy a {
+  color: var(--paper-primary-dark);
+}
+
+.results-copy a:hover,
+.results-copy a:focus-visible {
+  text-decoration: underline;
+}
+
+.result-highlight {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 2rem;
+  margin-top: 2.25rem;
+  padding: 1.5rem 1.75rem;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 10px;
+}
+
+.result-highlight p {
+  margin: 0;
+}
+
+.result-big {
+  color: #363636;
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.result-big span {
+  color: var(--paper-primary-dark);
+}
+
+/* ── BibTeX ── */
+.bibtex-code {
+  padding: 1.25rem 1.5rem;
+  color: #cdd6f4;
+  background: #1e1e2e;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* ── Grids ── */
+.fig-three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+/* KaTeX display equations scroll on small screens */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* ── Separator and alternating background ── */
+.section-sep {
+  margin: 0;
+  border: none;
+  border-top: 1px solid #e0e0e0;
+}
+
+.has-background-alt {
+  background-color: #fafafa;
+}
+
+/* ── Figure images ── */
+.fig-img {
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+}
+
+.fig-img.bordered {
+  border: 1px solid #dbdbdb;
+}
+
+@media (max-width: 768px) {
+  .fig-three-col {
+    grid-template-columns: 1fr;
+  }
+
+  .publication-title {
+    font-size: 1.65rem !important;
+  }
+
+  .publication-tagline {
+    font-size: 1rem;
+  }
+
+  .section-heading {
+    font-size: 1.4rem;
+  }
+
+  .section {
+    padding: 2rem 1rem;
+  }
+
+  .tldr-box,
+  .method-detail {
+    padding: 1rem 1.1rem;
+  }
+
+  .result-highlight {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 1rem 1.1rem;
+  }
+}

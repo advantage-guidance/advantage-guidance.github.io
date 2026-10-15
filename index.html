@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advantage Guidance: Reinforcement Learning with a Supervised Loss</title>
+  <meta name="description" content="Advantage Guidance is an off-policy RL algorithm that trains its policy with a simple supervised learning loss while outperforming strong RL baselines." />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;700&amp;family=Noto+Sans:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet" />
+  <!-- Bulma -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ],
+      throwOnError: false
+    });"></script>
+  <!-- Custom -->
+  <link rel="stylesheet" href="static/style.css?v=20261014-benchmark-links" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">
+            <span class="publication-title-part">Reinforcement Learning via</span>
+            <span class="publication-title-part">Advantage Guidance</span>
+          </h1>
+
+          <p class="publication-tagline">
+            performant off-policy RL with a simple supervised learning loss
+          </p>
+
+          <div class="is-size-5 publication-authors" style="margin-bottom:0.5rem;">
+            <span class="author-block">
+              <a href="https://zhouzypaul.github.io" target="_blank" rel="noopener">Zhiyuan Zhou</a>,
+            </span>
+            <span class="author-block">
+              <a href="https://people.eecs.berkeley.edu/~svlevine/" target="_blank" rel="noopener">Sergey Levine</a>
+            </span>
+          </div>
+
+          <div class="is-size-6 publication-authors" style="margin-bottom:1.25rem; color:#555;">
+            <span class="author-block">UC Berkeley</span>
+          </div>
+
+          <div class="publication-links">
+            <span class="link-block">
+              <a href="static/advantage-guidance.pdf" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fas fa-file-pdf" aria-hidden="true"></i></span>
+                <span>Paper</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="https://github.com/zhouzypaul/advantage-guidance" target="_blank" rel="noopener" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fab fa-github" aria-hidden="true"></i></span>
+                <span>Code</span>
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Teaser -->
+<section class="hero teaser">
+  <div class="container is-max-widescreen">
+    <div class="hero-body" style="padding-top:0; padding-bottom:2rem;">
+      <figure class="image">
+        <img class="fig-img" src="static/figures/overview.svg"
+             alt="Advantage Guidance aligns actions with requested advantages and achieves the highest aggregated success rate among the compared methods." />
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     TL;DR
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="tldr-box">
+      <h2 class="title is-3 section-heading tldr-heading has-text-centered">TL;DR</h2>
+      <p>
+        We introduce <strong>Advantage Guidance</strong>, a new RL algorithm that trains
+        with a <strong>simple supervised learning loss</strong> conditioned on advantages, yet
+        <strong>outperforms</strong> strong RL methods. The key is
+        to make the policy genuinely responsive to advantage conditioning, then use
+        contrastive diffusion guidance at sampling time for advantage maximization.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-sep" />
+
+<!-- ═══════════════════════════════════════════════════
+     MOTIVATION
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 section-heading">Can RL Be as Simple as Supervised Learning?</h2>
+    <div class="content">
+      <p>
+        RL holds the promise of learning a policy that can outperform the dataset behavior, but in practice often suffer from <u>instability</u>
+        and <u>hyperparameter sensitivity</u>. In contrast, supervised learning is stable and scalable, but is fundamentally limited by the quality of the demonstration data.
+        <strong>Can policy training be as simple and stable as supervised learning, yet as performant as RL?</strong>
+      </p>
+      <p>
+        One appealing option is to train the policy with supervised learning loss conditioned on future rewards or advantages,
+        then query with high advantage to generate "good" actions.
+        While such <strong>advantage-conditioned policies</strong> are conceptually appealing, naïvely doing so typically <u>underperforms</u> dedicated RL methods. 
+        What is missing from this simple recipe?
+    </div>
+  </div>
+</section>
+
+<hr class="section-sep" />
+
+<!-- ═══════════════════════════════════════════════════
+     ANALYSIS 1: MATCHING VS. MAXIMIZING
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <p class="analysis-kicker">Missing Piece #1</p>
+    <h2 class="title is-3 section-heading analysis-tagline">Matching Advantage Misses Better Actions</h2>
+    <p class="analysis-subtitle">
+      Conditioned policies match queried advantage level, but do not always favor high-advantage actions.
+    </p>
+
+    <div class="content">
+      <p>
+        To obtain performant RL policies, the objective is to <strong>maximize</strong> future rewards / advantage.
+        The advantage-maximizing policy under a KL constraint to reference policy $\hat\pi(a\mid s)$ has a closed form:
+      </p>
+      <div class="method-equation emphasized">
+        $$\pi^*_{\mathrm{KL}}(a\mid s)\propto\hat\pi(a\mid s)
+        \exp\!\left(\frac{A(s,a)}{\beta}\right),\qquad \beta&gt;0.$$
+      </div>
+      <p>
+        An <strong>advantage-conditioned policy</strong> targets actions with advantage close to the queried value $A_{\mathrm{query}}$.
+        Assuming the advantage is Gaussian distributed with variance $\sigma_y^2$, the conditioned policy is:
+      </p>
+      <div class="method-equation">
+        $$\pi(a\mid s,A_{\mathrm{query}})\propto\hat\pi(a\mid s)
+        \exp\!\left(-\frac{\left(A_{\mathrm{query}}-A(s,a)\right)^2}{2\sigma_y^2}\right).$$
+      </div>
+      <p>
+        This <u>penalizes</u> actions whose advantage falls below <em>or exceeds</em> the query, and does not always <strong>maximize advantage</strong>.
+        Classifier-free guidance (CFG) strengthens the same preference (see paper Section 4 for more details).
+        One cannot fully address this with a higher $A_{\mathrm{query}}$ because it would be out of training distribution.
+      </p>
+    </div>
+
+    <div class="insight-box">
+      <strong>Solution.</strong> Our <a href="#contrastive-guidance">contrastive guidance</a> formulation below can sample advantage-maximizing actions.
+      <figure class="image" style="max-width:720px; margin:1.5rem auto 0;">
+        <img class="fig-img" src="static/figures/advantage-guidance-distributions.svg"
+             alt="Achieved advantage distributions: AG conditioning matches the requested advantage, while AG with contrastive guidance favors higher-advantage actions." />
+      </figure>
+    </div>
+  </div>
+</section>
+
+<hr class="section-sep" />
+
+<!-- ═══════════════════════════════════════════════════
+     ANALYSIS 2: ADVANTAGE ALIGNMENT
+════════════════════════════════════════════════════ -->
+<section class="section has-background-alt">
+  <div class="container is-max-desktop">
+    <p class="analysis-kicker">Missing Piece #2</p>
+    <h2 class="title is-3 section-heading analysis-tagline">Advantage Alignment</h2>
+    <p class="analysis-subtitle">
+      If a policy is queried for a high-advantage action, it should produce one. Naïve conditioning often does not.
+    </p>
+
+    <div class="content">
+      <p>
+        The prerequisite for using the conditional advantage signal is that the policy has learned to respond to it.
+        We define <strong>advantage alignment</strong> as the extent to which the achieved advantage of a
+        sampled action matches the value used to query the conditional policy. An aligned policy should
+        produce higher-advantage actions when queried with higher values.
+      </p>
+    </div>
+
+    <figure class="image" style="margin:1.5rem 0 0.75rem;">
+      <img class="fig-img bordered" src="static/figures/advantage-alignment.svg"
+           alt="Achieved advantage versus query advantage across four OGBench domains. Advantage Guidance follows the requested value while naïve advantage conditioning responds weakly." />
+    </figure>
+    <p class="fig-caption">
+      <strong>The advantage alignment problem.</strong> Naïve advantage-conditioned policies 
+      responds very weakly to advantage inputs on 20 OGBench tasks across 4 domains, 
+      often generating actions that have the same advantages even when requested with different values, especially on hard long-horizon tasks.
+      Our method makes the achieved advantage closely track the requested advantage.
+    </p>
+
+    <div class="content">
+      <p>
+        We find that this is because the naïve advantage-conditioned policy mostly <u>ignores</u> the conditioning signal 
+        and <u>regresses to an unconditional policy</u>. And no, using a transformer does not fix this issue (see paper for more details).
+      </p>
+    </div>
+
+    <div class="insight-box">
+      <strong>Solution.</strong> We introduce two techniques below to make conditional training more effective and advantage-aligned: 
+      <a href="#action-imagination">action imagination</a> and <a href="#residual-parameterization">residual parameterization</a>.
+    </div>
+  </div>
+</section>
+
+<hr class="section-sep" />
+
+<!-- ═══════════════════════════════════════════════════
+     METHOD
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 section-heading">Our Method: <span style="color:var(--paper-primary-dark);">Advantage Guidance</span></h2>
+
+    <div class="content">
+      <p>
+        AG combines three ingredients. The first two make the conditional policy advantage-aligned during
+        training; the third uses that aligned policy to maximize advantage during sampling. Policy training
+        remains a standard supervised flow-matching objective throughout.
+      </p>
+    </div>
+
+    <div class="method-detail" id="action-imagination">
+      <div class="method-detail-heading">
+        <span class="method-number">1</span>
+        <h3 class="title is-4">Action Imagination</h3>
+      </div>
+      <div class="content">
+        <p>
+          Typically, a dataset contains only one action for any given state. 
+          As a result, the policy receives little direct supervision on how actions should change as the requested advantage vary.
+          We address this <u>lack of counterfactual supervision</u> by augmenting the dataset with actions sampled from the reference policy $\hat\pi$:
+        </p>
+        <div class="method-equation">
+          $$\begin{gathered}
+          \mathcal D_{\mathrm{aug}}=
+          \bigcup_{(s,a)\in\mathcal D}\left\{(s,a_i,A(s,a_i))\right\}_{i=0}^{K},\\[0.6em]
+          a_0=a,\qquad a_i\sim\hat\pi(\cdot\mid s),\quad i=1,\ldots,K.
+          \end{gathered}$$
+        </div>
+      </div>
+    </div>
+
+    <div class="method-detail" id="residual-parameterization">
+      <div class="method-detail-heading">
+        <span class="method-number">2</span>
+        <h3 class="title is-4">Residual Parameterization</h3>
+      </div>
+      <div class="content">
+        <p>
+          Since naïve conditioning often ignores the conditioning signal, 
+          this motivates an approach that forces the conditional policy to focus on the advantage input by separating out the conditional and unconditional components.
+          We train policies with flow matching, and parameterize the conditional policy as a residual flow $v_\theta$ to the flow field of an
+          unconditional reference policy $v_{\hat\pi}$:
+        </p>
+        <div class="method-equation emphasized">
+          $$v_\pi(x_t,t,s,y)=v_{\hat\pi}(x_t,t,s)+v_\theta(x_t,t,s,y).$$
+        </div>
+        <p>
+          The conditional policy is trained with conditional flow matching, and the reference flow $v_{\hat\pi}$ is 
+          trained with regular flow matching.
+        </p>
+        <div class="method-equation">
+          $$\begin{aligned}
+          \mathcal L_{\hat\pi}&=
+          \mathbb E_{(s,a)\sim\mathcal D,\,t,\epsilon}
+          \left[\left\|v_{\hat\pi}(x_t,t,s)-(a-\epsilon)\right\|_2^2\right],\\[1em]
+          \mathcal L(\theta)&=
+          \mathbb E_{(s,a,y)\sim\mathcal D_{\mathrm{aug}},\,t,\epsilon}
+          \left[\left\|
+          \operatorname{stopgrad}\!\left(v_{\hat\pi}(x_t,t,s)\right)
+          +v_\theta(x_t,t,s,y)-(a-\epsilon)
+          \right\|_2^2\right].
+          \end{aligned}$$
+        </div>
+        <p>
+          Since the reference flow $v_{\hat\pi}$ already handles the advantage-independent part of the denoising problem,
+          $v_\theta$ is encouraged to model how the velocity field must change with the advantage label $y$.
+        </p>
+      </div>
+    </div>
+
+    <div class="method-detail featured" id="contrastive-guidance">
+      <div class="method-detail-heading">
+        <span class="method-number">3</span>
+        <h3 class="title is-4">Contrastive Guidance</h3>
+      </div>
+      <div class="content">
+        <p>
+          During sampling, we use what we call <strong>contrastive guidance</strong> to steer the sampling process toward higher-advantage actions.
+          We contrast a high advantage label $y_+$ with a low advantage label $y_-$ during each denoising step:
+        </p>
+        <div class="method-equation emphasized">
+          $$v_{\mathrm{cg}}(x_t,t,s)=v_{\hat\pi}(x_t,t,s)+w\left[v_\theta(x_t,t,s,y_+)-v_\theta(x_t,t,s,y_-)\right],
+          \qquad y_+&gt;y_-.$$
+        </div>
+        <p class="guarantee-title">Theoretical guarantee.</p>
+        <p>
+          Suppose the advantage-label likelihood belongs to the exponential family
+          $p_Y(y\mid A)=h(y)\exp(T(y)A-F(A))$. If we choose $w, y_+, y_-$ such that
+          $1/\beta=w[T(y_+)-T(y_-)]$, the contrastively guided score exactly matches the score of
+        </p>
+        <div class="guarantee-equation">
+          $$\pi^*_{\mathrm{KL}}(a\mid s)\propto\hat\pi(a\mid s)
+          \exp\!\left(\frac{A(s,a)}{\beta}\right),$$
+        </div>
+        <p>
+          the solution to KL-regularized advantage maximization. Thus, for $w&gt;0$ and
+          $T(y_+)&gt;T(y_-)$, contrastive guidance favors high-advantage actions rather than merely
+          matching a fixed advantage target.
+        </p>
+        <p class="guarantee-title">Practical Implementation.</p>
+        <p>
+          In practice we choose the exponential family $p_Y(y\mid A)$ as a Gaussian distribution with variance $\sigma_y^2$.
+          In this case, we can choose guidance weight $w=\sigma_y^2/[\beta(y_+-y_-)]$ to achieve the desired score above.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-sep" />
+
+<!-- ═══════════════════════════════════════════════════
+     RESULTS
+════════════════════════════════════════════════════ -->
+<section class="section has-background-alt">
+  <div class="container is-max-widescreen results-container">
+    <h2 class="title is-3 section-heading">Results</h2>
+    <div class="content is-max-desktop results-copy">
+      <p>
+        We evaluate on <strong>26 long-horizon sparse-reward tasks</strong>: 20 tasks from
+        OGBench and 6 tasks from OCBench.
+        <a href="https://seohong.me/projects/ogbench/" target="_blank" rel="noopener">OGBench</a>'s <u>play-style data</u> comes from scripted behaviors pursuing random goals, often producing
+        trajectories that are suboptimal for the task.
+        <a href="https://seohong.me/projects/ocbench/" target="_blank" rel="noopener">OCBench</a> uses <u>near-expert demonstrations</u> designed to emulate the statistics of human demonstrations,
+        making it a particularly relevant test of RL on the kind of data used in real-world robotics.
+      </p>
+    </div>
+
+    <figure class="image" style="margin:1.5rem 0 0.75rem;">
+      <img class="fig-img bordered" src="static/figures/results.svg"
+           alt="Offline RL success rates across OGBench and OCBench. Advantage Guidance has the highest aggregate success rate." />
+    </figure>
+    <p class="fig-caption">
+      <strong>Offline RL performance, 10 seeds.</strong> Advantage Guidance (blue) achieves the highest
+      aggregate success rate across all 26 tasks, outperforming strong actor-critic methods (grey)
+      as well as supervised-learning-based methods (green) and diffusion guidance methods (shaded green).
+    </p>
+
+    <div class="result-highlight">
+      <p class="result-big">Simple supervised training.<br /><span>State-of-the-art performance.</span></p>
+      <p>
+        While we expected the main benefit of AG to be its simplicity, it empirically outperform much
+        more elaborate RL methods.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-sep" />
+
+<!-- ═══════════════════════════════════════════════════
+     BIBTEX
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 section-heading">BibTeX</h2>
+        <div class="bibtex-code">@article{zhou2026advantage,
+  title   = {Reinforcement Learning via Advantage Guidance},
+  author  = {Zhou, Zhiyuan and Levine, Sergey},
+  year    = {2026}
+}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer" style="padding:1.5rem;">
+  <div class="content has-text-centered" style="font-size:0.88rem; color:#999;">
+    Website template adapted from
+    <a href="https://q-guided-flow.github.io" target="_blank" rel="noopener">Q-Guided Flow</a>,
+    itself inspired by <a href="https://nerfies.github.io" target="_blank" rel="noopener">Nerfies</a>
+    under a <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a> license.
+  </div>
+</footer>
+
+</body>
+</html>
