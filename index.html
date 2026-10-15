@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advantage Guidance: Reinforcement Learning with a Supervised Loss</title>
-  <meta name="description" content="Advantage Guidance is an off-policy RL algorithm that trains its policy with a simple supervised learning loss while outperforming strong RL baselines." />
+  <title>Reinforcement Learning via Advantage Guidance</title>
+  <meta name="description" content="We introduce Advantage Guidance, a new RL algorithm that trains with a simple supervised learning loss conditioned on advantages, yet outperforms strong RL methods. The key is to make the policy genuinely responsive to advantage conditioning, then use contrastive diffusion guidance at sampling time for advantage maximization." />
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;700&amp;family=Noto+Sans:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet" />
@@ -24,7 +24,7 @@
       throwOnError: false
     });"></script>
   <!-- Custom -->
-  <link rel="stylesheet" href="static/style.css?v=20261014-stacked-teaser" />
+  <link rel="stylesheet" href="static/style.css?v=20261014-iphone-title-teaser" />
 </head>
 <body>
 
@@ -135,8 +135,8 @@
       <p>
         One appealing option is to train the policy with supervised learning loss conditioned on future rewards or advantages,
         then query with high advantage to generate "good" actions.
-        While such <strong>advantage-conditioned policies</strong> are conceptually appealing, naïvely doing so typically <u>underperforms</u> dedicated RL methods. 
-        What is missing from this simple recipe?
+        While such <strong>advantage-conditioned policy</strong> is conceptually appealing, naïvely doing so typically <u>underperforms</u> dedicated RL methods. 
+        <em>What is missing from this simple recipe?</em>
       </p>
     </div>
   </div>
@@ -218,7 +218,7 @@
     <p class="fig-caption">
       <strong>The advantage alignment problem.</strong> Naïve advantage-conditioned policies 
       responds very weakly to advantage inputs on 20 OGBench tasks across 4 domains, 
-      often generating actions that have the same advantages even when requested with different values, especially on hard long-horizon tasks.
+      often generating actions that have the same advantages even when requested with different values.
       Our method makes the achieved advantage closely track the requested advantage.
     </p>
 
@@ -249,7 +249,7 @@
       <p>
         AG combines three ingredients. The first two make the conditional policy advantage-aligned during
         training; the third uses that aligned policy to maximize advantage during sampling. Policy training
-        remains a standard supervised flow-matching objective throughout.
+        remains a standard supervised flow-matching objective.
       </p>
     </div>
 
@@ -344,7 +344,7 @@
         </p>
         <p class="guarantee-title">Practical Implementation.</p>
         <p>
-          In practice we choose the exponential family $p_Y(y\mid A)$ as a Gaussian distribution with variance $\sigma_y^2$.
+          In practice we choose the exponential family $p_Y(y\mid A)$ as a Gaussian distribution with mean $A$ and variance $\sigma_y^2$.
           In this case, we can choose guidance weight $w=\sigma_y^2/[\beta(y_+-y_-)]$ to achieve the desired score above.
         </p>
       </div>

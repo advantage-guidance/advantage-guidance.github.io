@@ -430,6 +430,12 @@ h2.title.tldr-heading,
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
+    width: 90%;
+    margin-inline: auto;
+  }
+
+  .teaser .hero-body {
+    padding-inline: 0;
   }
 
   .results-studies {
@@ -445,7 +451,15 @@ h2.title.tldr-heading,
   }
 
   .publication-title {
+    container-type: inline-size;
     font-size: 2rem !important;
+  }
+
+  .publication-title-part {
+    display: block;
+    /* Fit the longer first line to the title container without splitting either phrase. */
+    font-size: min(2.3rem, calc(100cqw / 13.2));
+    white-space: nowrap;
   }
 
   .publication-tagline {
