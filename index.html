@@ -24,7 +24,7 @@
       throwOnError: false
     });"></script>
   <!-- Custom -->
-  <link rel="stylesheet" href="static/style.css?v=20261014-matched-plots" />
+  <link rel="stylesheet" href="static/style.css?v=20261014-larger-mobile-title" />
 </head>
 <body>
 
@@ -273,7 +273,7 @@
         <p>
           Since naïve conditioning often ignores the conditioning signal, 
           this motivates an approach that forces the conditional policy to focus on the advantage input by separating out the conditional and unconditional components.
-          We train policies with flow matching, and parameterize the conditional policy as a residual flow $v_\theta$ to the flow field of an
+          We train policies with flow matching, and parameterize the conditional policy as a <strong>residual flow</strong> $v_\theta$ to the flow field of an
           unconditional reference policy $v_{\hat\pi}$:
         </p>
         <div class="method-equation emphasized">
@@ -417,7 +417,7 @@
     <div class="columns is-centered">
       <div class="column is-four-fifths">
         <h2 class="title is-3 section-heading">BibTeX</h2>
-        <div class="bibtex-code">@article{zhou2026advantage,
+        <div class="bibtex-code">@article{zhou2026reinforcement,
   title   = {Reinforcement Learning via Advantage Guidance},
   author  = {Zhou, Zhiyuan and Levine, Sergey},
   journal = {arXiv preprint arXiv:2610.19783},

@@ -4,6 +4,8 @@
   --paper-primary-dark: #4F83A6;
   --paper-green: #86C3A4;
   --paper-green-dark: #3C9673;
+  --paper-green-ink: #2D7355;
+  --paper-hover-green: #67A6B1;
 }
 
 body {
@@ -54,7 +56,7 @@ body {
 
 .publication-authors a:hover,
 .publication-authors a:focus {
-  color: #3273dc;
+  color: var(--paper-hover-green);
   text-decoration: underline;
 }
 
@@ -68,6 +70,12 @@ body {
 
 .publication-links .button {
   min-height: 44px;
+}
+
+.publication-links .button.is-dark:hover,
+.publication-links .button.is-dark:focus-visible {
+  color: #254f49;
+  background-color: var(--paper-hover-green);
 }
 
 /* ── Teaser ── */
@@ -119,7 +127,7 @@ h2.title.tldr-heading,
 /* ── Analysis headline ── */
 .analysis-kicker {
   margin-bottom: 0.35rem;
-  color: #777;
+  color: var(--paper-green-ink);
   font-family: 'Google Sans', 'Noto Sans', sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
@@ -179,7 +187,7 @@ h2.title.tldr-heading,
 
 .insight-box a:hover,
 .insight-box a:focus-visible {
-  color: var(--paper-primary-dark);
+  color: var(--paper-hover-green);
   text-decoration: underline;
 }
 
@@ -274,6 +282,7 @@ h2.title.tldr-heading,
 
 .results-copy a:hover,
 .results-copy a:focus-visible {
+  color: var(--paper-hover-green);
   text-decoration: underline;
 }
 
@@ -384,7 +393,17 @@ h2.title.tldr-heading,
 }
 
 .has-background-alt {
-  background-color: #fafafa;
+  background-color: #fafcfb;
+}
+
+.footer {
+  background-color: #f5f9f7;
+}
+
+.footer a:hover,
+.footer a:focus-visible {
+  color: var(--paper-hover-green);
+  text-decoration: underline;
 }
 
 /* ── Figure images ── */
@@ -412,7 +431,7 @@ h2.title.tldr-heading,
   }
 
   .publication-title {
-    font-size: clamp(1.1rem, 5.8vw, 1.65rem) !important;
+    font-size: 2rem !important;
   }
 
   .publication-tagline {
