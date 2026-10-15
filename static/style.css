@@ -88,6 +88,10 @@ body {
   padding-bottom: 3rem;
 }
 
+.teaser-mobile {
+  display: none;
+}
+
 /* ── TL;DR ── */
 h2.title.tldr-heading,
 .section-heading.tldr-heading {
@@ -418,6 +422,16 @@ h2.title.tldr-heading,
 }
 
 @media (max-width: 768px) {
+  .teaser-desktop {
+    display: none;
+  }
+
+  .teaser-mobile {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
   .results-studies {
     gap: 1rem;
   }

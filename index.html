@@ -24,7 +24,7 @@
       throwOnError: false
     });"></script>
   <!-- Custom -->
-  <link rel="stylesheet" href="static/style.css?v=20261014-larger-mobile-title" />
+  <link rel="stylesheet" href="static/style.css?v=20261014-stacked-teaser" />
 </head>
 <body>
 
@@ -82,10 +82,20 @@
 <section class="hero teaser">
   <div class="container is-max-widescreen">
     <div class="hero-body" style="padding-top:0; padding-bottom:2rem;">
-      <figure class="image" aria-label="Advantage Guidance overview figure">
+      <figure class="image teaser-desktop" aria-label="Advantage Guidance overview figure">
         <img class="fig-img" src="static/figures/overview.svg"
              alt="Advantage Guidance aligns actions with requested advantages and achieves the highest aggregated success rate among the compared methods." />
       </figure>
+      <div class="teaser-mobile">
+        <figure class="image">
+          <img class="fig-img" src="static/figures/teaser-policy.svg"
+               alt="Advantage Guidance aligns actions with the queried advantage, then contrastive guidance favors higher-advantage actions." />
+        </figure>
+        <figure class="image">
+          <img class="fig-img" src="static/figures/teaser-performance.svg"
+               alt="Advantage Guidance achieves the highest aggregated success rate among the compared reinforcement learning methods." />
+        </figure>
+      </div>
     </div>
   </div>
 </section>
