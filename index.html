@@ -24,7 +24,7 @@
       throwOnError: false
     });"></script>
   <!-- Custom -->
-  <link rel="stylesheet" href="static/style.css?v=20261014-scaled-figures" />
+  <link rel="stylesheet" href="static/style.css?v=20261014-matched-plots" />
 </head>
 <body>
 
@@ -377,6 +377,32 @@
         While we expected the main benefit of AG to be its simplicity, it empirically outperforms much
         more elaborate RL methods.
       </p>
+    </div>
+
+    <div class="results-studies">
+      <article class="result-study">
+        <h3 class="title is-4">Do Both Training Ingredients Matter?</h3>
+        <figure class="image">
+          <img class="fig-img bordered" src="static/figures/training-ablation.svg"
+               alt="Removing action imagination or residual parameterization lowers average success on both OGBench and OCBench compared with full Advantage Guidance." />
+        </figure>
+        <p class="fig-caption">
+          <strong>Action imagination and residual parameterization both help.</strong> Removing either
+          component reduces success on both benchmarks; combining them gives the strongest performance.
+        </p>
+      </article>
+
+      <article class="result-study">
+        <h3 class="title is-4">Comparison of different sampling methods for AG</h3>
+        <figure class="image">
+          <img class="fig-img bordered" src="static/figures/sampling-comparison.svg"
+               alt="For the same AG-trained policy, conditioning, classifier-free guidance, and contrastive guidance perform similarly on OGBench, while contrastive guidance performs best on OCBench." />
+        </figure>
+        <p class="fig-caption">
+          <strong>Conditional vs CFG vs Contrastive Guidance (CG) sampling for AG:</strong> 
+          even when quried with high-enough advantage, conditional sampling and CFG significantly underperform CG on 6 OCBench tasks.
+        </p>
+      </article>
     </div>
   </div>
 </section>
