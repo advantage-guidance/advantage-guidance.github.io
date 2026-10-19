@@ -24,7 +24,8 @@
       throwOnError: false
     });"></script>
   <!-- Custom -->
-  <link rel="stylesheet" href="static/style.css?v=20261014-iphone-title-teaser" />
+  <link rel="stylesheet" href="static/style.css?v=20261018-cube-videos" />
+  <script defer src="static/task-videos.js"></script>
 </head>
 <body>
 
@@ -369,6 +370,67 @@
         <a href="https://seohong.me/projects/ocbench/" target="_blank" rel="noopener">OCBench</a> uses <u>near-expert demonstrations</u> designed to emulate the statistics of human demonstrations,
         making it a particularly relevant test of RL on the kind of data used in real-world robotics.
       </p>
+    </div>
+
+    <div class="task-gallery" id="task-gallery-heading" role="group" aria-label="Benchmark task videos">
+      <div class="task-grid">
+        <figure class="task-card">
+          <video class="task-video" controls loop muted playsinline preload="none"
+                 poster="static/videos/ocbench-block-single-task1_3x.jpg"
+                 src="static/videos/ocbench-block-single-task1_3x.mp4"
+                 aria-label="OCBench Block Single: move a block to its target, shown at 3 times speed">
+            <a href="static/videos/ocbench-block-single-task1_3x.mp4">Watch the Block Single task video</a>.
+          </video>
+        </figure>
+        <figure class="task-card">
+          <video class="task-video" controls loop muted playsinline preload="none"
+                 poster="static/videos/ocbench-block-double-task2_3x.jpg"
+                 src="static/videos/ocbench-block-double-task2_3x.mp4"
+                 aria-label="OCBench Block Double: stack two blocks, shown at 3 times speed">
+            <a href="static/videos/ocbench-block-double-task2_3x.mp4">Watch the Block Double task video</a>.
+          </video>
+        </figure>
+        <figure class="task-card">
+          <video class="task-video" controls loop muted playsinline preload="none"
+                 poster="static/videos/ocbench-chamber-easy-task3_3x.jpg"
+                 src="static/videos/ocbench-chamber-easy-task3_3x.mp4"
+                 aria-label="OCBench Chamber Easy: take blocks out of the drawer, shown at 3 times speed">
+            <a href="static/videos/ocbench-chamber-easy-task3_3x.mp4">Watch the Chamber Easy task video</a>.
+          </video>
+        </figure>
+        <figure class="task-card">
+          <video class="task-video" controls loop muted playsinline preload="none"
+                 poster="static/videos/ogbench-cube-single-v0_task4.jpg"
+                 src="static/videos/ogbench-cube-single-v0_task4.mp4"
+                 aria-label="OGBench Cube Single task example">
+            <a href="static/videos/ogbench-cube-single-v0_task4.mp4">Watch the Cube Single task video</a>.
+          </video>
+        </figure>
+        <figure class="task-card">
+          <video class="task-video" controls loop muted playsinline preload="none"
+                 poster="static/videos/ogbench-cube-double-v0_task5.jpg"
+                 src="static/videos/ogbench-cube-double-v0_task5.mp4"
+                 aria-label="OGBench Cube Double task example">
+            <a href="static/videos/ogbench-cube-double-v0_task5.mp4">Watch the Cube Double task video</a>.
+          </video>
+        </figure>
+        <figure class="task-card">
+          <video class="task-video" controls loop muted playsinline preload="none"
+                 poster="static/videos/ogbench-scene-v0_task4.jpg"
+                 src="static/videos/ogbench-scene-v0_task4.mp4"
+                 aria-label="OGBench Scene: unlock the drawer and put a cube inside">
+            <a href="static/videos/ogbench-scene-v0_task4.mp4">Watch the Scene task video</a>.
+          </video>
+        </figure>
+        <figure class="task-card">
+          <video class="task-video" controls loop muted playsinline preload="none"
+                 poster="static/videos/ogbench-puzzle-3x3-v0_task4.jpg"
+                 src="static/videos/ogbench-puzzle-3x3-v0_task4.mp4"
+                 aria-label="OGBench Puzzle 3 by 3: turn all buttons blue">
+            <a href="static/videos/ogbench-puzzle-3x3-v0_task4.mp4">Watch the Puzzle task video</a>.
+          </video>
+        </figure>
+      </div>
     </div>
 
     <figure class="image" aria-label="Offline reinforcement learning results by task family" style="margin:1.5rem 0 0.75rem;">
