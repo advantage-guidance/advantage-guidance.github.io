@@ -84,16 +84,16 @@
   <div class="container is-max-widescreen">
     <div class="hero-body" style="padding-top:0; padding-bottom:2rem;">
       <figure class="image teaser-desktop" aria-label="Advantage Guidance overview figure">
-        <img class="fig-img" src="static/figures/overview.svg"
+        <img class="fig-img" src="static/figures/overview.svg?v=20261019"
              alt="Advantage Guidance aligns actions with requested advantages and achieves the highest aggregated success rate among the compared methods." />
       </figure>
       <div class="teaser-mobile">
         <figure class="image">
-          <img class="fig-img" src="static/figures/teaser-policy.svg"
+          <img class="fig-img" src="static/figures/teaser-policy.svg?v=20261019"
                alt="Advantage Guidance aligns actions with the queried advantage, then contrastive guidance favors higher-advantage actions." />
         </figure>
         <figure class="image">
-          <img class="fig-img" src="static/figures/teaser-performance.svg"
+          <img class="fig-img" src="static/figures/teaser-performance.svg?v=20261019"
                alt="Advantage Guidance achieves the highest aggregated success rate among the compared reinforcement learning methods." />
         </figure>
       </div>
@@ -183,7 +183,7 @@
     <div class="insight-box">
       <strong>Solution.</strong> Our <a href="#contrastive-guidance">contrastive guidance</a> formulation below can sample advantage-maximizing actions.
       <figure class="image" aria-label="Advantage Guidance sampling distributions" style="max-width:720px; margin:1.5rem auto 0;">
-        <img class="fig-img" src="static/figures/advantage-guidance-distributions.svg"
+        <img class="fig-img" src="static/figures/advantage-guidance-distributions.svg?v=20261019"
              alt="Achieved advantage distributions: AG conditioning matches the requested advantage, while AG with contrastive guidance favors higher-advantage actions." />
       </figure>
     </div>
@@ -434,7 +434,7 @@
     </div>
 
     <figure class="image" aria-label="Offline reinforcement learning results by task family" style="margin:1.5rem 0 0.75rem;">
-      <img class="fig-img bordered" src="static/figures/results.svg?v=20261014"
+      <img class="fig-img bordered" src="static/figures/results.svg?v=20261019"
            alt="Offline RL success rates across OGBench and OCBench. Advantage Guidance has the highest aggregate success rate." />
     </figure>
     <p class="fig-caption">
@@ -455,7 +455,7 @@
       <article class="result-study">
         <h3 class="title is-4">Do Both Training Ingredients Matter?</h3>
         <figure class="image">
-          <img class="fig-img bordered" src="static/figures/training-ablation.svg"
+          <img class="fig-img bordered" src="static/figures/training-ablation.svg?v=20261019"
                alt="Removing action imagination or residual parameterization lowers average success on both OGBench and OCBench compared with full Advantage Guidance." />
         </figure>
         <p class="fig-caption">
@@ -467,7 +467,7 @@
       <article class="result-study">
         <h3 class="title is-4">Comparison of different sampling methods for AG</h3>
         <figure class="image">
-          <img class="fig-img bordered" src="static/figures/sampling-comparison.svg"
+          <img class="fig-img bordered" src="static/figures/sampling-comparison.svg?v=20261019"
                alt="For the same AG-trained policy, conditioning, classifier-free guidance, and contrastive guidance perform similarly on OGBench, while contrastive guidance performs best on OCBench." />
         </figure>
         <p class="fig-caption">
