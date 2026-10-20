@@ -24,7 +24,7 @@
       throwOnError: false
     });"></script>
   <!-- Custom -->
-  <link rel="stylesheet" href="static/style.css?v=20261019-animation-only" />
+  <link rel="stylesheet" href="static/style.css?v=20261020-paper-link" />
   <script defer src="static/task-videos.js?v=20261019-animation-only"></script>
 </head>
 <body>
@@ -251,6 +251,7 @@
         AG combines three ingredients. The first two make the conditional policy advantage-aligned during
         training; the third uses that aligned policy to maximize advantage during sampling. Policy training
         remains a standard supervised flow-matching objective.
+        See the paper's <a class="paper-link" href="https://arxiv.org/html/2610.19783#alg1">Algorithm 1</a> for an algorithm summary.
       </p>
     </div>
 
@@ -263,7 +264,7 @@
         <p>
           Typically, a dataset contains only one action for any given state. 
           As a result, the policy receives little direct supervision on how actions should change as the requested advantage vary.
-          We address this <u>lack of counterfactual supervision</u> by augmenting the dataset with actions sampled from the reference policy $\hat\pi$:
+          We provide <u>counterfactual supervision</u> by augmenting the dataset with actions sampled from the reference policy $\hat\pi$:
         </p>
         <div class="method-equation">
           $$\begin{gathered}
@@ -272,6 +273,12 @@
           a_0=a,\qquad a_i\sim\hat\pi(\cdot\mid s),\quad i=1,\ldots,K.
           \end{gathered}$$
         </div>
+        <p>
+          In practice, we also normalize advantages using the imagined actions.
+          We compute $\mu_s=\frac{1}{K+1}\sum_{j=0}^{K}A(s,a_j)$ and
+          $\sigma_s^2=\frac{1}{K+1}\sum_{j=0}^{K}(A(s,a_j)-\mu_s)^2$, then use
+          $\tilde A(s,a_i)=(A(s,a_i)-\mu_s) / \sqrt{\sigma_s^2+\delta}$ as the conditional input.
+        </p>
       </div>
     </div>
 
@@ -294,7 +301,7 @@
           The conditional policy is trained with conditional flow matching, and the reference flow $v_{\hat\pi}$ is 
           trained with regular flow matching.
         </p>
-        <div class="method-equation">
+        <div class="method-equation equation-compact">
           $$\begin{aligned}
           \mathcal L_{\hat\pi}&=
           \mathbb E_{(s,a)\sim\mathcal D,\,t,\epsilon}
@@ -322,34 +329,35 @@
       <div class="content">
         <p>
           During sampling, we use what we call <strong>contrastive guidance</strong> to steer the sampling process toward higher-advantage actions.
-          We contrast a high advantage label $y_+$ with a low advantage label $y_-$ during each denoising step:
+          We contrast advantage labels $y_+$ and $y_-$ during each denoising step:
         </p>
-        <div class="method-equation emphasized">
+        <div class="method-equation emphasized equation-compact">
           $$v_{\mathrm{cg}}(x_t,t,s)=v_{\hat\pi}(x_t,t,s)+w\left[v_\theta(x_t,t,s,y_+)-v_\theta(x_t,t,s,y_-)\right],
-          \qquad y_+&gt;y_-.$$
+          \quad y_+&gt;y_-.$$
         </div>
         <p class="guarantee-title">Theoretical guarantee.</p>
         <p>
           Suppose the advantage-label likelihood belongs to the exponential family
           $p_Y(y\mid A)=h(y)\exp(T(y)A-F(A))$. If we choose $w, y_+, y_-$ such that
-          $1/\beta=w[T(y_+)-T(y_-)]$, the contrastively guided score exactly matches the score of
+          $w[T(y_+)-T(y_-)]=1/\beta$, the contrastively guided score exactly matches the score of
         </p>
         <div class="guarantee-equation">
           $$\pi^*_{\mathrm{KL}}(a\mid s)\propto\hat\pi(a\mid s)
           \exp\!\left(\frac{A(s,a)}{\beta}\right),$$
         </div>
         <p>
-          the solution to KL-regularized advantage maximization. Thus, for $w&gt;0$ and
+          the solution to KL-regularized advantage maximization where $\beta$ is the regularization strength. Thus, for $w&gt;0$ and
           $T(y_+)&gt;T(y_-)$, contrastive guidance favors high-advantage actions rather than merely
-          matching a fixed advantage target.
+          matching a fixed advantage target. See proof in the paper.
         </p>
         <p class="guarantee-title">Practical Implementation.</p>
         <p>
-          In practice we choose the exponential family $p_Y(y\mid A)$ as a Gaussian distribution with mean $A$ and variance $\sigma_y^2$.
-          In this case, we can choose guidance weight $w=\sigma_y^2/[\beta(y_+-y_-)]$ to achieve the desired score above.
+          In practice we choose the exponential family $p_Y(y\mid A)$ as a Gaussian distribution $\mathcal N(\mu, \sigma_y^2)$.
+          In this case, we can choose guidance weight $w=\sigma_y^2/[\beta(y_+-y_-)]$ to maximize advantage subject to KL constraint with strength $\beta$.
         </p>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -361,13 +369,13 @@
 <section class="section has-background-alt">
   <div class="container is-max-widescreen results-container">
     <h2 class="title is-3 section-heading">Results</h2>
-    <div class="content is-max-desktop results-copy">
+    <div class="content results-copy">
       <p>
         We evaluate on <strong>26 long-horizon sparse-reward tasks</strong>: 20 tasks from
         OGBench and 6 tasks from OCBench.
         <a href="https://seohong.me/projects/ogbench/" target="_blank" rel="noopener">OGBench</a>'s <u>play-style data</u> comes from scripted behaviors pursuing random goals, often producing
-        trajectories that are suboptimal for the task.
-        <a href="https://seohong.me/projects/ocbench/" target="_blank" rel="noopener">OCBench</a> uses <u>near-expert demonstrations</u> designed to emulate the statistics of human demonstrations,
+        trajectories that are very suboptimal for the task.
+        <a href="https://seohong.me/projects/ocbench/" target="_blank" rel="noopener">OCBench</a> uses <u>near-expert demonstrations</u> designed to emulate human-like demonstrations (e.g. smooth, non-markovian),
         making it a particularly relevant test of RL on the kind of data used in real-world robotics.
       </p>
     </div>

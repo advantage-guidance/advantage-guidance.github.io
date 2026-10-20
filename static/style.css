@@ -12,7 +12,7 @@ body {
   font-family: 'Noto Sans', sans-serif;
 }
 
-/* Keep long math and media inside their own scrollable regions. */
+/* Allow content to fit narrow layouts. */
 .container,
 .column,
 .method-detail,
@@ -148,7 +148,7 @@ h2.title.tldr-heading,
   max-width: 760px;
   margin: 0 0 1.75rem;
   color: #777;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   line-height: 1.4;
 }
 
@@ -185,12 +185,15 @@ h2.title.tldr-heading,
   mix-blend-mode: multiply;
 }
 
-.insight-box a {
+.insight-box a,
+.paper-link {
   color: var(--paper-primary-dark);
 }
 
 .insight-box a:hover,
-.insight-box a:focus-visible {
+.insight-box a:focus-visible,
+.paper-link:hover,
+.paper-link:focus-visible {
   color: var(--paper-hover-green);
   text-decoration: underline;
 }
@@ -247,11 +250,20 @@ h2.title.tldr-heading,
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
-  overflow-x: auto;
 }
 
 .method-equation .katex-display {
   margin: 0.5rem 0;
+}
+
+.method-equation.equation-compact {
+  font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .method-equation.equation-compact {
+    font-size: 0.75rem;
+  }
 }
 
 .method-equation.emphasized {
@@ -274,10 +286,6 @@ h2.title.tldr-heading,
 /* ── Results ── */
 .results-container {
   max-width: 1152px !important;
-}
-
-.results-copy {
-  max-width: 960px;
 }
 
 .results-copy a {
@@ -414,10 +422,17 @@ h2.title.tldr-heading,
   align-items: stretch;
 }
 
-/* KaTeX display equations scroll on small screens */
+/* Other display equations retain scrolling on small screens. */
 .katex-display {
   overflow-x: auto;
   overflow-y: hidden;
+  text-align: left;
+}
+
+.katex-display > .katex {
+  display: inline-block;
+  min-width: 100%;
+  text-align: center;
 }
 
 :focus-visible {
