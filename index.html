@@ -25,8 +25,8 @@
       throwOnError: false
     });"></script>
   <!-- Custom -->
-  <link rel="stylesheet" href="static/style.css?v=20261028-algorithm-mobile" />
-  <script defer src="static/algorithm-layout.js?v=20261028-labels-above"></script>
+  <link rel="stylesheet" href="static/style.css?v=20261028-practitioner-guide" />
+  <script defer src="static/algorithm-layout.js?v=20261028-exclusive-panels"></script>
   <script defer src="static/task-videos.js?v=20261019-animation-only"></script>
 </head>
 <body>
@@ -364,12 +364,18 @@
       </div>
     </div>
 
-    <details class="algorithm-disclosure" id="algorithm-1">
-      <summary class="algorithm-toggle">
-        <span class="algorithm-chevron" aria-hidden="true">&#9656;</span>
-        <span><span class="algorithm-show">Show</span><span class="algorithm-hide">Hide</span> algorithm summary</span>
-      </summary>
-      <figure class="algorithm-box" id="algorithm" aria-labelledby="algorithm-caption">
+    <div class="algorithm-disclosure" id="algorithm-1">
+      <div class="method-expansion-controls">
+        <button type="button" class="algorithm-toggle" aria-expanded="false" aria-controls="algorithm">
+          <span class="algorithm-chevron" aria-hidden="true">&#9656;</span>
+          <span><span class="algorithm-show">Show</span><span class="algorithm-hide">Hide</span> algorithm summary</span>
+        </button>
+        <button type="button" class="algorithm-toggle" id="practitioner-guide-toggle" aria-expanded="false" aria-controls="practitioner-guide">
+          <span class="algorithm-chevron" aria-hidden="true">&#9656;</span>
+          <span>Practitioner’s guide</span>
+        </button>
+      </div>
+      <figure class="algorithm-box" id="algorithm" aria-labelledby="algorithm-caption" hidden>
         <figcaption id="algorithm-caption" class="algorithm-caption">
           Advantage Guidance (AG)
         </figcaption>
@@ -414,7 +420,14 @@
           $v_{\hat\pi}=v_{\hat\pi}(x_t,t,s)$ and $v_\theta(y)=v_\theta(x_t,t,s,y)$.
         </p>
       </figure>
-    </details>
+      <div class="content practitioner-guide" id="practitioner-guide" role="region" aria-labelledby="practitioner-guide-toggle" hidden>
+        <ul>
+          <li>Normalizing advantages per-state with imagined actions helps, and is better than per-batch / dataset-level normalization.</li>
+          <li>For training, different values of $\sigma_y$ perform similarly, and simply setting $\sigma_y=0.01$ usually works well.</li>
+          <li>For contrastive guidance, fix $(y_+,y_-)=(1,-1)$ and tune $w$. These three variables are co-dependent, so tuning one is enough. Set $w=\sigma_y^2/[\beta(y_+-y_-)]$ for a KL constraint with strength $\beta$. In practice, the optimal $\beta$ is unknown, so tune $w$ for maximum performance.</li>
+        </ul>
+      </div>
+    </div>
 
   </div>
 </section>

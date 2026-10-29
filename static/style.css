@@ -288,6 +288,34 @@ h2.title.tldr-heading,
   margin-top: 1.5rem;
 }
 
+.method-expansion-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.algorithm-disclosure > [hidden] {
+  display: none;
+}
+
+.practitioner-guide {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: #eef4f9;
+  border: 1px solid #b3cfe0;
+  border-radius: 6px;
+  line-height: 1.7;
+}
+
+.practitioner-guide ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.practitioner-guide li + li {
+  margin-top: 0.75rem;
+}
+
 .algorithm-toggle {
   display: inline-flex;
   align-items: center;
@@ -298,13 +326,9 @@ h2.title.tldr-heading,
   border-radius: 6px;
   background: #eef4f9;
   color: #326b9e;
+  font: inherit;
   font-weight: 700;
   cursor: pointer;
-  list-style: none;
-}
-
-.algorithm-toggle::-webkit-details-marker {
-  display: none;
 }
 
 .algorithm-toggle:hover {
@@ -320,16 +344,16 @@ h2.title.tldr-heading,
   display: inline-block;
 }
 
-.algorithm-disclosure[open] .algorithm-chevron {
+.algorithm-toggle[aria-expanded="true"] .algorithm-chevron {
   transform: rotate(90deg);
 }
 
 .algorithm-hide,
-.algorithm-disclosure[open] .algorithm-show {
+.algorithm-toggle[aria-expanded="true"] .algorithm-show {
   display: none;
 }
 
-.algorithm-disclosure[open] .algorithm-hide {
+.algorithm-toggle[aria-expanded="true"] .algorithm-hide {
   display: inline;
 }
 
