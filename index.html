@@ -25,7 +25,8 @@
       throwOnError: false
     });"></script>
   <!-- Custom -->
-  <link rel="stylesheet" href="static/style.css?v=20261028-browser-theme" />
+  <link rel="stylesheet" href="static/style.css?v=20261028-algorithm-mobile" />
+  <script defer src="static/algorithm-layout.js?v=20261028-labels-above"></script>
   <script defer src="static/task-videos.js?v=20261019-animation-only"></script>
 </head>
 <body>
@@ -321,7 +322,7 @@
         </div>
         <p>
           Since the reference flow $v_{\hat\pi}$ already handles the advantage-independent part of the denoising problem,
-          $v_\theta$ is encouraged to model how the velocity field must change with the advantage label $y$.
+          $v_\theta$ is encouraged to model how the velocity field must change with the advantage input $y$.
         </p>
       </div>
     </div>
@@ -334,7 +335,7 @@
       <div class="content">
         <p>
           During sampling, we use what we call <strong>contrastive guidance</strong> to guide the sampling process toward higher-advantage actions.
-          We contrast advantage labels $y_+$ and $y_-$ during each denoising step:
+          We contrast advantages $y_+$ and $y_-$ during each denoising step:
         </p>
         <div class="method-equation emphasized equation-compact">
           $$v_{\mathrm{cg}}(x_t,t,s)=v_{\hat\pi}(x_t,t,s)+w\left[v_\theta(x_t,t,s,y_+)-v_\theta(x_t,t,s,y_-)\right],
@@ -362,6 +363,58 @@
         </p>
       </div>
     </div>
+
+    <details class="algorithm-disclosure" id="algorithm-1">
+      <summary class="algorithm-toggle">
+        <span class="algorithm-chevron" aria-hidden="true">&#9656;</span>
+        <span><span class="algorithm-show">Show</span><span class="algorithm-hide">Hide</span> algorithm summary</span>
+      </summary>
+      <figure class="algorithm-box" id="algorithm" aria-labelledby="algorithm-caption">
+        <figcaption id="algorithm-caption" class="algorithm-caption">
+          Advantage Guidance (AG)
+        </figcaption>
+        <div class="algorithm-columns">
+          <div class="algorithm-part">
+            <h3 class="algorithm-heading">Training</h3>
+            <p><strong>Input:</strong> dataset $\mathcal D$, advantage $A(s,a)$, $K$, advantage variable std $\sigma_y$</p>
+            <p><strong>while</strong> not converged <strong>do</strong></p>
+            <div class="algorithm-loop">
+              <p>$(s,a)\sim\mathcal D$, $\epsilon\sim\mathcal N(0,I)$, $t\sim\mathcal U(0,1)$</p>
+              <p>Train ref. policy $\hat\pi$ with $\mathcal L_{\mathrm{BC}}=\left\|v_{\hat\pi}-(a-\epsilon)\right\|_2^2$</p>
+              <p class="algorithm-annotated"><span>$a_0\gets a;\quad a_i\sim\hat\pi(\cdot\mid s),\quad i=1,\ldots,K$</span>
+                <span class="algorithm-comment"><span aria-hidden="true">◀</span> Action imagination</span></p>
+              <p>$A_i\gets A(s,a_i),\quad i=0,\ldots,K$</p>
+              <p class="algorithm-annotated"><span>$\tilde A_i\gets (A_i-\operatorname{mean}(A_{0:K})) / \sqrt{\operatorname{var}(A_{0:K})+\delta}$</span>
+                <span class="algorithm-comment algorithm-comment-muted"><span aria-hidden="true">◀</span> Adv. norm.</span></p>
+              <p class="algorithm-annotated"><span>$y_i\sim\mathcal N(\tilde A_i,\sigma_y^2),\quad i=0,\ldots,K$</span>
+                <span class="algorithm-comment algorithm-comment-muted"><span aria-hidden="true">◀</span> Gaussian label</span></p>
+              <p class="algorithm-annotated"><span>$\Delta\theta\gets\nabla_\theta\sum_{i=0}^{K}\left\|v_{\hat\pi}+v_\theta(y_i)-(a_i-\epsilon)\right\|_2^2$</span>
+                <span class="algorithm-comment"><span aria-hidden="true">◀</span> Residual param.</span></p>
+            </div>
+            <p><strong>end while</strong></p>
+            <p><strong>return</strong> $v_{\hat\pi},v_\theta$</p>
+          </div>
+          <div class="algorithm-part">
+            <h3 class="algorithm-heading">Sampling</h3>
+            <p><strong>Input:</strong> state $s$, trained velocities $v_{\hat\pi},v_\theta$, conditional query pair $y_+&gt;y_-$, guidance weight $w$, steps $T$</p>
+            <p>$x_0\sim\mathcal N(0,I)$</p>
+            <p><strong>for</strong> $n=0,\ldots,T-1$ <strong>do</strong></p>
+            <div class="algorithm-loop">
+              <p>$t\gets n/T$</p>
+              <p><span class="algorithm-comment algorithm-comment-above"><span aria-hidden="true">▼</span> Contrastive guidance</span>
+                $v\gets v_{\hat\pi}+w\bigl[v_\theta(y_+)-v_\theta(y_-)\bigr]$</p>
+              <p>$x_{n+1}\gets x_n+\frac{1}{T}v$</p>
+            </div>
+            <p><strong>end for</strong></p>
+            <p><strong>return</strong> $a=x_T$</p>
+          </div>
+        </div>
+        <p class="algorithm-note">
+          Velocity-field arguments are abbreviated above:
+          $v_{\hat\pi}=v_{\hat\pi}(x_t,t,s)$ and $v_\theta(y)=v_\theta(x_t,t,s,y)$.
+        </p>
+      </figure>
+    </details>
 
   </div>
 </section>
