@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#eef4f9" />
   <title>Reinforcement Learning via Advantage Guidance</title>
   <meta name="description" content="We introduce Advantage Guidance, a new RL algorithm that trains with a simple supervised learning loss conditioned on advantages, yet outperforms strong RL methods. The key is to make the policy genuinely responsive to advantage conditioning, then use contrastive diffusion guidance at sampling time for advantage maximization." />
 
@@ -24,7 +25,7 @@
       throwOnError: false
     });"></script>
   <!-- Custom -->
-  <link rel="stylesheet" href="static/style.css?v=20261020-larger-tagline" />
+  <link rel="stylesheet" href="static/style.css?v=20261028-browser-theme" />
   <script defer src="static/task-videos.js?v=20261019-animation-only"></script>
 </head>
 <body>
@@ -174,7 +175,7 @@
         \exp\!\left(-\frac{\left(A_{\mathrm{query}}-A(s,a)\right)^2}{2\sigma_y^2}\right).$$
       </div>
       <p>
-        This <u>penalizes</u> actions whose advantage falls below <em>or exceeds</em> the query, and does not always <strong>maximize advantage</strong>.
+        This <u>penalizes</u> actions whose advantage falls below <em>or exceeds</em> (!!) the query, and does not always <strong>maximize advantage</strong>.
         Classifier-free guidance (CFG) strengthens the same preference (see paper Section 4 for more details).
         One cannot fully address this with a higher $A_{\mathrm{query}}$ because it would be out of training distribution.
       </p>
@@ -262,8 +263,8 @@
       </div>
       <div class="content">
         <p>
-          Typically, a dataset contains only one action for any given state. 
-          As a result, the policy receives little direct supervision on how actions should change as the requested advantage vary.
+          Typically, a dataset contains only one action for any given state; 
+          as a result, the policy receives little supervision on how actions should change as the requested advantage vary.
           We provide <u>counterfactual supervision</u> by augmenting the dataset with actions sampled from the reference policy $\hat\pi$:
         </p>
         <div class="method-equation">
@@ -274,7 +275,11 @@
           \end{gathered}$$
         </div>
         <p>
-          In practice, we also normalize advantages using the imagined actions.
+          The conditional policy is trained on the augmented dataset $\mathcal D_{\mathrm{aug}}$.
+        </p>
+        <p class="guarantee-title" style="color: #000;">Normalization.</p>
+        <p>
+          In practice, we also normalize advantages using the imagined actions (similar to the group normalization in GRPO).
           We compute $\mu_s=\frac{1}{K+1}\sum_{j=0}^{K}A(s,a_j)$ and
           $\sigma_s^2=\frac{1}{K+1}\sum_{j=0}^{K}(A(s,a_j)-\mu_s)^2$, then use
           $\tilde A(s,a_i)=(A(s,a_i)-\mu_s) / \sqrt{\sigma_s^2+\delta}$ as the conditional input.
@@ -352,7 +357,7 @@
         </p>
         <p class="guarantee-title">Practical Implementation.</p>
         <p>
-          In practice we choose the exponential family $p_Y(y\mid A)$ as a Gaussian distribution $\mathcal N(\mu, \sigma_y^2)$.
+          In practice we choose the exponential family $p_Y(y\mid A)$ as a Gaussian distribution $\mathcal N(A, \sigma_y^2)$.
           In this case, we can choose guidance weight $w=\sigma_y^2/[\beta(y_+-y_-)]$ to maximize advantage subject to KL constraint with strength $\beta$.
         </p>
       </div>
